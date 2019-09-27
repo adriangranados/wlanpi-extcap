@@ -49,11 +49,11 @@ Where _<PATH_TO_PYTHON_INTERPRETER>_ is the path to the Python executable and _<
 "C:\Program Files (x86)\Python37-32\python.exe" "C:\Program Files\Wireshark\extcap\wlanpidump" %*
 ```
 
-> __Note__: You will have to repeat the setup of the `wlanpidump` extcap interface on your computer each time you update Wireshark. The Wireshark installer doesn't preserve 3rd-party extcap interfaces added to the _extcap_ folder.
-
 Now launch Wireshark and verify that __WLAN Pi remote capture__ is listed as an extcap interface:
 
 ![WLAN Pi Extcap Interface](../master/images/wlanpidump-interface.png "WLAN Pi Extcap Interface")
+
+> __Note__: You will have to repeat the setup of the `wlanpidump` extcap interface on your computer each time you update Wireshark. The Wireshark installer doesn't preserve 3rd-party extcap interfaces added to the _extcap_ folder.
 
 ## Usage
 
