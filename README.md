@@ -31,7 +31,9 @@ wlanpi ALL = (root) NOPASSWD: /sbin/iwconfig, /usr/sbin/iw
 ## Usage
 
 1. Click the _gear_ icon next to "WLAN Pi remote capture" to display the interface options:
+
 ![WLAN Pi Extcap Interface Options](../master/images/wlanpidump-interface-options.png "WLAN Pi Extcap Interface Options")
+
 2. Enter the WLAN Pi SSH address, e.g. 192.168.42.1.
 3. Enter the username and password.
 > __Note:__ To avoid having to enter the password each time you start a capture, setup passwordless SSH authentication and skip this step.
