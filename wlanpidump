@@ -14,6 +14,7 @@
 
 from __future__ import print_function
 
+import os
 import sys
 import argparse
 import subprocess
@@ -89,7 +90,10 @@ def extcap_dlts(interface):
         print("dlt {number=147}{name=wifidump}{display=Remote capture dependent DLT}")
 
 def extcap_capture(interface, host, port, username, password, channel, channel_width, fifo, capture_filter):
-    sshdump = "/Applications/Wireshark.app/Contents/MacOS/extcap/sshdump"
+    extcap_path = sys.argv[0]
+    extcap_dir  = os.path.dirname(extcap_path)
+    sshdump_path = os.path.join(extcap_dir, "sshdump")
+
     capture_cmd = ""
 
     if not username:
@@ -108,7 +112,7 @@ def extcap_capture(interface, host, port, username, password, channel, channel_w
         capture_cmd="sudo /sbin/iwconfig wlan0 mode Monitor > /dev/null; sudo /usr/sbin/iw wlan0 set channel " + channel + " " + channel_width + " > /dev/null && /usr/sbin/tcpdump -i wlan0 -U -w -"
 
     if capture_cmd:
-        sshdump_args = [sshdump,
+        sshdump_args = [sshdump_path,
                         "--extcap-interface", "sshdump",
                         "--remote-capture-command", capture_cmd,
                         "--remote-host", host,
