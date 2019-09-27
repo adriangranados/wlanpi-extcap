@@ -8,7 +8,7 @@ As it is, the extcap interface is only compatible with Wireshark on macOS (see [
 ## Setup
 
 ### In your Mac:
-1. Copy `wlanpidump` to `/Applications/Wireshark.app/Contents/MacOS/extcap`
+1. Copy `wlanpidump` to `/Applications/Wireshark.app/Contents/MacOS/extcap/`
 1. Make sure it has execution permissions:
 
 ```sh
