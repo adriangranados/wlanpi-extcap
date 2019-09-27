@@ -1,5 +1,5 @@
 # wlanpi-extcap
-Wireshark extcap interface for the [WLAN Pi](www.wlanpi.com). It allows you to perform live captures on a specific channel using the WLAN Pi's Wi-Fi adapter.
+Wireshark extcap interface for the [WLAN Pi](www.wlanpi.com). It allows you to perform live remote captures on a specific channel using the WLAN Pi's Wi-Fi adapter.
 
 This extcap interface is basically a wrapper for [sshdump](https://www.wireshark.org/docs/man-pages/sshdump.html) that includes an option to choose the channel we want to capture on. It also simplifies the configuration of the extcap interface so that the user doesn't deal with remote capture commands, etc.
 
