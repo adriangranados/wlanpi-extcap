@@ -3,30 +3,61 @@ Wireshark extcap interface for the [WLAN Pi](www.wlanpi.com). It allows you to p
 
 This extcap interface is basically a wrapper for [sshdump](https://www.wireshark.org/docs/man-pages/sshdump.html) that includes an option to choose the channel we want to capture on. It also simplifies the configuration of the extcap interface so that the user doesn't deal with remote capture commands, etc.
 
-As it is, the extcap interface is only compatible with Wireshark on macOS (see [To-Do](#to-do)).
+## Requirements
+
+### WLAN Pi
+- Requires WLAN Pi 1.8.1.
+
+### macOS
+- Everything needed is already installed.
+
+### Windows
+- Python.
+- The `wlanpidump` extcap interface requires the `sshdump` extcap interface, which is not installed by default on Windows. When installing Wireshark on Windows, select __SSHdump__ as one of the components to install:
+
+<p align="center">
+<img src="../master/images/wireshark-installer-sshdump.png" alt="Wireshark Installer SSHdumpr" height="400px">
+</p>
 
 ## Setup
 
-### In your Mac:
-1. Copy `wlanpidump` to `/Applications/Wireshark.app/Contents/MacOS/extcap/`
-1. Make sure it has execution permissions:
-
-```sh
-chmod +x /Applications/Wireshark.app/Contents/MacOS/extcap/wlanpidump
-```
-
-1. Launch Wireshark and verify that __WLAN Pi remote capture__ is listed as an extcap interface:
-
-![WLAN Pi Extcap Interface](../master/images/wlanpidump-interface.png "WLAN Pi Extcap Interface")
-
-> __Note__: You will have to repeat this process each time you update Wireshark. The Wireshark installer doesn't preserve 3rd-party extcap interfaces added to the _extcap_ folder.
-
-### In your WLAN Pi:
+### WLAN Pi:
 1. Create the file `/etc/sudoers.d/wlanpidump` with the following line:
 ```sh
 wlanpi ALL = (root) NOPASSWD: /sbin/iwconfig, /usr/sbin/iw
 ```
 > __Note__: This is required so that the extcap interface can put the Wi-Fi adapter into monitor mode and change the channel before starting the capture.
+
+### If you're running Wireshark on macOS:
+1. Copy `wlanpidump` to `/Applications/Wireshark.app/Contents/MacOS/extcap/`
+2. Make sure it has execution permissions:
+
+```sh
+chmod +x /Applications/Wireshark.app/Contents/MacOS/extcap/wlanpidump
+```
+
+### If you're running Wireshark on Windows:
+
+1. Copy `wlanpidump` to `C:\Program Files\Wireshark\extcap\`
+2. Create a file called `wlanpidump.bat` in the same `C:\Program Files\Wireshark\extcap\` directory with the following content: 
+
+```bat
+@echo off
+<PATH_TO_PYTHON_INTERPRETER> <PATH_TO_WLANPIDUMP> %*
+```
+
+Where `<PATH_TO_PYTHON_INTERPRETER>` is the path to the Python executable and `<PATH_TO_WLANPIDUMP>` is the path to the `wlanpidump` extcap interface script. For example:
+
+```bat
+@echo off
+"C:\Program Files (x86)\Python37-32\python.exe" "C:\Program Files\Wireshark\extcap\wlanpidump" %*
+```
+
+Now launch Wireshark and verify that __WLAN Pi remote capture__ is listed as an extcap interface:
+
+![WLAN Pi Extcap Interface](../master/images/wlanpidump-interface.png "WLAN Pi Extcap Interface")
+
+> __Note__: You will have to repeat the setup of the `wlanpidump` extcap interface on your computer each time you update Wireshark. The Wireshark installer doesn't preserve 3rd-party extcap interfaces added to the _extcap_ folder.
 
 ## Usage
 
@@ -49,10 +80,4 @@ wlanpi ALL = (root) NOPASSWD: /sbin/iwconfig, /usr/sbin/iw
 
 > __Note:__ To avoid having to enter the password each time you start a capture, setup passwordless SSH authentication and skip this step.
 
-4. Click the _Start_ button to start the capture.
-
-## To-Do
-
-- Make it so only channels supported by the WLAN Pi's Wi-Fi adapter are listed in the "Channel" option.
-- Add support for Windows and Linux.
-- Improve error handling.
+4. Click the __Start__ button to start the capture.
