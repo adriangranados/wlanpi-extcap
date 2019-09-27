@@ -91,7 +91,7 @@ def extcap_capture(interface, host, port, username, password, channel, fifo, cap
         capture_filter = ""
 
     if (interface == "wifidump"):
-        capture_cmd="sudo /sbin/iwconfig wlan0 mode Monitor; sudo /usr/sbin/iw wlan0 set channel " + channel + " > /dev/null ; /usr/sbin/tcpdump -i wlan0 -U -w -"
+        capture_cmd="sudo /sbin/iwconfig wlan0 mode Monitor > /dev/null; sudo /usr/sbin/iw wlan0 set channel " + channel + " > /dev/null ; /usr/sbin/tcpdump -i wlan0 -U -w -"
 
     if capture_cmd:
         sshdump_args = [sshdump,
