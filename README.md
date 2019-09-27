@@ -78,6 +78,6 @@ Now launch Wireshark and verify that __WLAN Pi remote capture__ is listed as an 
 <img src="../master/images/wlanpidump-interface-options-auth.png" alt="WLAN Pi Extcap Interface Options - Auth" height="200px">
 </p>
 
-> __Note:__ The password is not saved, so to avoid having to enter the password each time you start a capture, setup passwordless SSH authentication.
+> __Note:__ The password is not saved, so to avoid having to enter the password each time you start a capture, I recommend you setup passwordless SSH authentication.
 
 4. Click the __Start__ button to start the capture.
