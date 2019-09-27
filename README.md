@@ -76,4 +76,4 @@ Now launch Wireshark and verify that __WLAN Pi remote capture__ is listed as an 
 
 > __Note:__ To avoid having to enter the password each time you start a capture, setup passwordless SSH authentication and skip this step.
 
-4. Click the _Start_ button to start the capture.
+4. Click the __Start__ button to start the capture.
