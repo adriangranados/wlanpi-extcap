@@ -19,7 +19,7 @@ chmod +x /Applications/Wireshark.app/Contents/MacOS/extcap/wlanpidump
 
 ![WLAN Pi Extcap Interface](../master/images/wlanpidump-interface.png "WLAN Pi Extcap Interface")
 
-> __Note__: You will have to repeat this process each time you update Wireshark. The Wireshark installer doesn't preserve 3rd-party extcaps added to the extcap folder.
+> __Note__: You will have to repeat this process each time you update Wireshark. The Wireshark installer doesn't preserve 3rd-party extcap interfaces added to the _extcap_ folder.
 
 ### In your WLAN Pi:
 1. Create the file /etc/sudoers.d/wlanpidump with the following line:
