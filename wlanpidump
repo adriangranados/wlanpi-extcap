@@ -1,0 +1,170 @@
+#!/usr/bin/env python
+
+# Copyright 2019 Adrian Granados <adrian@adriangranados.com>
+#
+# Wireshark extcap interface for the WLAN Pi (www.wlanpi.com).
+#
+# This extcap interface is basically a wrapper for sshdump so that
+# we can specify additional capture options, such as the channel
+# we want to capture on, and to simplify the configuration of the
+# extcap interface so that the user does not have to deal with
+# remote capture commands, etc.
+# 
+# Based on Wireshark's extcap_example.py.
+
+from __future__ import print_function
+
+import sys
+import argparse
+import subprocess
+
+ERROR_USAGE          = 0
+ERROR_ARG            = 1
+ERROR_INTERFACE      = 2
+ERROR_FIFO           = 3
+
+channels_wifi = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
+            36, 40, 44, 48, 52, 56, 60, 64, 100, 104, 108, 112, 116, 120, 124, 128, 132, 136, 140, 144, 149, 153, 167, 161, 165]
+
+"""
+This code has been taken from http://stackoverflow.com/questions/5943249/python-argparse-and-controlling-overriding-the-exit-status-code - originally developed by Rob Cowie http://stackoverflow.com/users/46690/rob-cowie
+"""
+class ArgumentParser(argparse.ArgumentParser):
+    def _get_action_from_name(self, name):
+        """Given a name, get the Action instance registered with this parser.
+        If only it were made available in the ArgumentError object. It is
+        passed as it's first arg...
+        """
+        container = self._actions
+        if name is None:
+            return None
+        for action in container:
+            if '/'.join(action.option_strings) == name:
+                return action
+            elif action.metavar == name:
+                return action
+            elif action.dest == name:
+                return action
+
+    def error(self, message):
+        exc = sys.exc_info()[1]
+        if exc:
+            exc.argument = self._get_action_from_name(exc.argument_name)
+            raise exc
+        super(ArgumentParser, self).error(message)
+
+### EXTCAP FUNCTIONALITY
+
+def extcap_config(interface, option):
+
+    if (interface == "wifidump"):
+        print("arg {number=0}{call=--host}{display=WLAN Pi Address}{type=string}{tooltip=The remote SSH host. It can be both an IP address or a hostname}{required=true}{group=Capture}")
+        print("arg {number=1}{call=--port}{display=WLAN Pi Port}{type=unsigned}{tooltip=The remote SSH host port (1-65535)}{range=1,65535}{default=22}{group=Capture}")
+        print("arg {number=2}{call=--username}{display=WLAN Pi Username}{type=string}{tooltip=The remote SSH username. If not provided, the current user will be used}{group=Capture}")
+        print("arg {number=3}{call=--password}{display=WLAN Pi Password}{type=password}{tooltip=The SSH password, used when other methods (SSH agent or key files) are unavailable.}{group=Capture}")
+        print("arg {number=4}{call=--wifi-channel}{display=Channel}{type=selector}{tooltip=The IEEE 802.11 channel to capture}{group=Capture}")
+        for ch in channels_wifi:
+            print("value {arg=4}{value=" + str(ch) + "}{display=Channel " + str(ch) + "}")
+
+def extcap_version():
+    print("extcap {version=1.0}")
+
+def extcap_interfaces():
+    print("extcap {version=1.0}")
+    print("interface {value=wifidump}{display=WLAN Pi remote capture}")
+
+def extcap_dlts(interface):
+    if (interface == "wifidump"):
+        print("dlt {number=147}{name=wifidump}{display=Remote capture dependent DLT}")
+
+def extcap_capture(interface, host, port, username, password, channel, fifo, capture_filter):
+    sshdump = "/Applications/Wireshark.app/Contents/MacOS/extcap/sshdump"
+    capture_cmd = ""
+
+    if not username:
+        username = "wlanpi"
+
+    if not password:
+        password = ""
+
+    if not capture_filter:
+        capture_filter = ""
+
+    if (interface == "wifidump"):
+        capture_cmd="sudo /sbin/iwconfig wlan0 mode Monitor; sudo /usr/sbin/iw wlan0 set channel " + channel + " > /dev/null ; /usr/sbin/tcpdump -i wlan0 -U -w -"
+
+    if capture_cmd:
+        sshdump_args = [sshdump,
+                        "--extcap-interface", "sshdump",
+                        "--remote-capture-command", capture_cmd,
+                        "--remote-host", host,
+                        "--remote-port", port,
+                        "--remote-username", username,
+                        "--remote-password", password,
+                        "--remote-sudo",
+                        "--fifo", fifo,
+                        "--extcap-capture-filter", capture_filter,
+                        "--capture"]
+
+        subprocess.call(sshdump_args)
+
+###
+
+def usage():
+    print("Usage: %s <--extcap-interfaces | --extcap-dlts | --extcap-interface | --extcap-config | --capture | --extcap-capture-filter | --fifo>" % sys.argv[0])
+
+if __name__ == '__main__':
+
+    option = ""
+
+    parser = ArgumentParser(
+        prog="wlanpidump",
+        description="WLAN Pi remote capture"
+    )
+
+    #Extcap Arguments
+    parser.add_argument("--capture", help="Start the capture routine", action="store_true")
+    parser.add_argument("--extcap-interfaces", help="Provide a list of interfaces to capture from", action="store_true")
+    parser.add_argument("--extcap-interface", help="Provide the interface to capture from")
+    parser.add_argument("--extcap-dlts", help="Provide a list of dlts for the given interface", action="store_true")
+    parser.add_argument("--extcap-config", help="Provide a list of configurations for the given interface",
+                        action="store_true")
+    parser.add_argument("--extcap-capture-filter", help="Used together with capture to provide a capture filter")
+    parser.add_argument("--fifo", help="Use together with capture to provide the fifo to dump data to")
+    parser.add_argument("--extcap-version", help="Shows the version of this utility", nargs='?', default="")
+
+    # Interface Arguments
+    parser.add_argument("--host", help="The remote SSH host")
+    parser.add_argument("--port", help="The remote SSH port", default="22")
+    parser.add_argument("--username", help="The remote SSH host username")
+    parser.add_argument("--password", help="The remote SSH port password.  If not specified, ssh-agent and ssh-key are used.")
+    parser.add_argument("--wifi-channel", help="The IEEE 802.11 channel to capture")
+
+    try:
+        args, unknown = parser.parse_known_args()
+    except argparse.ArgumentError as exc:
+        print("%s: %s" % (exc.argument.dest, exc.message), file=sys.stderr)
+        sys.exit(ERROR_ARG)
+
+    if ( args.extcap_version and not args.extcap_interfaces ):
+        extcap_version()
+        sys.exit(0)
+
+    if ( args.extcap_interfaces == False and args.extcap_interface == None ):
+        parser.exit("An interface must be provided or the selection must be displayed")
+    if ( args.extcap_interfaces == True or args.extcap_interface == None ):
+        extcap_interfaces()
+        sys.exit(0)
+
+    if args.extcap_config:
+        extcap_config(args.extcap_interface, option)
+    elif args.extcap_dlts:
+        extcap_dlts(args.extcap_interface)
+    elif args.capture:
+        if (args.extcap_interface == "wifidump"):
+            extcap_capture(args.extcap_interface, args.host, args.port, args.username, args.password, args.wifi_channel, args.fifo, args.extcap_capture_filter)
+        else:
+            sys.exit(ERROR_INTERFACE)
+    else:
+        usage()
+        sys.exit(ERROR_USAGE)
