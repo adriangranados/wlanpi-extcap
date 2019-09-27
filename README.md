@@ -9,7 +9,7 @@ This extcap interface is basically a wrapper for [sshdump](https://www.wireshark
 Requires WLAN Pi 1.8.1.
 
 ### Windows
-The `wlanpidump` extcap interface requires `sshdump` to be installed, which is not installed by default on Windows. When installing Wireshark on Windows, select __SSHdump__ as one of the components to install:
+The `wlanpidump` extcap interface requires the `sshdump` extcap interface, which is not installed by default on Windows. When installing Wireshark on Windows, select __SSHdump__ as one of the components to install:
 
 <p align="center">
 <img src="../master/images/wireshark-installer-sshdump.png" alt="Wireshark Installer SSHdumpr" height="400px">
