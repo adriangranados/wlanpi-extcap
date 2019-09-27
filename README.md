@@ -46,7 +46,7 @@ chmod +x /Applications/Wireshark.app/Contents/MacOS/extcap/wlanpidump
 <PATH_TO_PYTHON_INTERPRETER> <PATH_TO_WLANPIDUMP> %*
 ```
 
-Where _<PATH_TO_PYTHON_INTERPRETER>_ is the path to the Python executable and _<PATH_TO_WLANPIDUMP>_ is the path to the `wlanpidump` extcap interface script. For example:
+Where `<PATH_TO_PYTHON_INTERPRETER>` is the path to the Python executable and `<PATH_TO_WLANPIDUMP>` is the path to the `wlanpidump` extcap interface script. For example:
 
 ```bat
 @echo off
