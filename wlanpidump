@@ -67,6 +67,7 @@ def extcap_config(interface, option):
         print("arg {number=3}{call=--port}{display=WLAN Pi Port}{type=unsigned}{tooltip=The remote SSH host port (1-65535)}{range=1,65535}{default=22}{group=Server}")
         print("arg {number=4}{call=--username}{display=WLAN Pi Username}{type=string}{tooltip=The remote SSH username. If not provided, the current user will be used}{group=Authentication}")
         print("arg {number=5}{call=--password}{display=WLAN Pi Password}{type=password}{tooltip=The SSH password, used when other methods (SSH agent or key files) are unavailable.}{group=Authentication}")
+        print("arg {number=4}{call=--sshkey}{display=Path to SSH private key}{type=fileselect}{tooltip=The path on the local filesystem of the private ssh key}{group=Authentication}")
 
         # Channel values
         for ch in channels_wifi:
@@ -89,7 +90,7 @@ def extcap_dlts(interface):
     if (interface == "wifidump"):
         print("dlt {number=147}{name=wifidump}{display=Remote capture dependent DLT}")
 
-def extcap_capture(interface, host, port, username, password, channel, channel_width, fifo, capture_filter):
+def extcap_capture(interface, host, port, username, password, sshkey, channel, channel_width, fifo, capture_filter):
     extcap_path = sys.argv[0]
     extcap_dir  = os.path.dirname(extcap_path)
     sshdump_path = os.path.join(extcap_dir, "sshdump")
@@ -101,6 +102,9 @@ def extcap_capture(interface, host, port, username, password, channel, channel_w
 
     if not password:
         password = ""
+
+    if not sshkey:
+        sshkey = ""
 
     if not capture_filter:
         capture_filter = ""
@@ -119,6 +123,7 @@ def extcap_capture(interface, host, port, username, password, channel, channel_w
                         "--remote-port", port,
                         "--remote-username", username,
                         "--remote-password", password,
+                        "--sshkey", sshkey,
                         "--remote-sudo",
                         "--fifo", fifo,
                         "--extcap-capture-filter", capture_filter,
@@ -155,7 +160,8 @@ if __name__ == '__main__':
     parser.add_argument("--host", help="The remote SSH host")
     parser.add_argument("--port", help="The remote SSH port", default="22")
     parser.add_argument("--username", help="The remote SSH host username")
-    parser.add_argument("--password", help="The remote SSH port password.  If not specified, ssh-agent and ssh-key are used.")
+    parser.add_argument("--password", help="The remote SSH port password (if not specified, ssh-agent and ssh-key are used)")
+    parser.add_argument("--sshkey", help="The path of the ssh key for passwordless authentication")
     parser.add_argument("--wifi-channel", help="The IEEE 802.11 channel to capture")
     parser.add_argument("--wifi-channel-width", help="The width of the channel (HT20, HT40-, HT40+, 80MHz)")
 
@@ -181,7 +187,8 @@ if __name__ == '__main__':
         extcap_dlts(args.extcap_interface)
     elif args.capture:
         if (args.extcap_interface == "wifidump"):
-            extcap_capture(args.extcap_interface, args.host, args.port, args.username, args.password, args.wifi_channel, args.wifi_channel_width, args.fifo, args.extcap_capture_filter)
+            extcap_capture(args.extcap_interface, args.host, args.port, args.username, args.password, args.sshkey,
+                           args.wifi_channel, args.wifi_channel_width, args.fifo, args.extcap_capture_filter)
         else:
             sys.exit(ERROR_INTERFACE)
     else:
