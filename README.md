@@ -22,7 +22,7 @@ chmod +x /Applications/Wireshark.app/Contents/MacOS/extcap/wlanpidump
 > __Note__: You will have to repeat this process each time you update Wireshark. The Wireshark installer doesn't preserve 3rd-party extcap interfaces added to the _extcap_ folder.
 
 ### In your WLAN Pi:
-1. Create the file /etc/sudoers.d/wlanpidump with the following line:
+1. Create the file `/etc/sudoers.d/wlanpidump` with the following line:
 ```sh
 wlanpi ALL = (root) NOPASSWD: /sbin/iwconfig, /usr/sbin/iw
 ```
