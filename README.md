@@ -6,7 +6,7 @@ This extcap interface is basically a wrapper for [sshdump](https://www.wireshark
 ## Requirements
 
 ### WLAN Pi
-- Requires WLAN Pi 1.8.1.
+- Requires [WLAN Pi 1.8.1 or newer](https://github.com/WLAN-Pi/wlanpi/releases).
 
 ### macOS
 - Everything needed is already installed.
@@ -22,7 +22,8 @@ This extcap interface is basically a wrapper for [sshdump](https://www.wireshark
 ## Setup
 
 ### WLAN Pi:
-1. Create the file `/etc/sudoers.d/wlanpidump` with the following line:
+
+If you're running WLAN Pi 1.8.2 or newer, there's nothing to setup. Otherwise, create the file `/etc/sudoers.d/wlanpidump` with the following content:
 ```sh
 wlanpi ALL = (root) NOPASSWD: /sbin/iwconfig, /usr/sbin/iw
 ```
