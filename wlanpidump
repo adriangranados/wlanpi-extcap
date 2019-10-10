@@ -124,7 +124,7 @@ def extcap_capture(interface, host, port, username, password, sshkey, remote_int
         remote_channel_width = "HT20"
 
     if (interface == "wifidump"):
-        capture_cmd="sudo /sbin/iwconfig wlan0 mode Monitor > /dev/null; sudo /usr/sbin/iw " + remote_interface + \
+        capture_cmd="sudo /sbin/iwconfig " + remote_interface + " mode Monitor > /dev/null; sudo /usr/sbin/iw " + remote_interface + \
                     " set channel " + remote_channel + " " + remote_channel_width + \
                     " > /dev/null && /usr/sbin/tcpdump -i " + remote_interface + " -U -w -"
 
