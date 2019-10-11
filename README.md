@@ -1,3 +1,7 @@
+## This project has been deprecated and it is being replaced by [wlan-extcap](https://github.com/adriangranados/wlan-extcap).
+
+---
+
 # wlanpi-extcap
 Wireshark extcap interface for the [WLAN Pi](www.wlanpi.com). It allows you to perform live remote captures on a specific channel using the WLAN Pi's Wi-Fi adapter.
 
