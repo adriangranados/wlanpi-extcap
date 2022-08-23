@@ -1,4 +1,4 @@
-## This project has been deprecated and it is being replaced by [wlan-extcap](https://github.com/adriangranados/wlan-extcap).
+## This project has been deprecated and it's been replaced by [wlan-extcap](https://github.com/adriangranados/wlan-extcap).
 
 ---
 
